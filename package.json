@@ -1,0 +1,29 @@
+{
+  "name": "asset-rev",
+  "version": "1.0.0",
+  "description": "Append hash to assets and updates references in each file specified",
+  "repository": "git@github.com:Brianzchen/asset-rev.git",
+  "main": "index.js",
+  "author": "Brian Chen <brian.chen@tabcorp.com.au>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "bin": {
+    "asset-rev": "bin/rev.js"
+  },
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "dependencies": {
+    "app-root-path": "^2.1.0",
+    "uniqid": "^5.0.3"
+  },
+  "devDependencies": {
+    "find": "^0.2.9",
+    "jest": "^23.6.0",
+    "mkdirp": "^0.5.1",
+    "rimraf": "^2.6.2"
+  }
+}
