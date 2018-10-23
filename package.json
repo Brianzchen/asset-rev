@@ -17,9 +17,7 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "app-root-path": "^2.1.0",
-    "md5": "^2.2.1",
-    "uniqid": "^5.0.3"
+    "app-root-path": "^2.1.0"
   },
   "devDependencies": {
     "find": "^0.2.9",

@@ -1,8 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const glob = require('glob');
-const uniqid = require('uniqid');
-const md5 = require('md5');
+const crypto = require('crypto');
 const appRootPath = require('app-root-path');
 
 module.exports = (workingDir, patterns) => new Promise(resolve => {
@@ -25,7 +24,10 @@ module.exports = (workingDir, patterns) => new Promise(resolve => {
 
   // Replace file names with hashed counterpart and store reference of hashed name
   const hashedFiles = getSimplePath(hashingFiles.map(fileName => {
-    const hash = md5(uniqid());
+    const randomBuf = crypto.randomBytes(256);
+    const md5 = crypto.createHash('md5');
+    md5.update(randomBuf.toString());
+    const hash = md5.digest('hex');
 
     const array = fileName.split('/');
 
