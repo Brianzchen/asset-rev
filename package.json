@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "app-root-path": "^2.1.0",
+    "md5": "^2.2.1",
     "uniqid": "^5.0.3"
   },
   "devDependencies": {
