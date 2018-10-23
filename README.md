@@ -1,4 +1,5 @@
 # asset-rev
+
 Append hash to assets and updates references in each file specified
 
 ## Installation
@@ -62,7 +63,7 @@ When specifying your globs, be careful that if your patterns match a dir name, t
 
 ## Inspiration
 
-I created this little script as I wanted an alternative to [grunt-usemin](https://github.com/yeoman/grunt-usemin), but without grunt. I searched quite a while a wasn't able to find a solid alternative that makes use of simple npm scripts so I decided to write my own.
+I created this little script as I wanted an alternative to [grunt-usemin](https://github.com/yeoman/grunt-usemin), but without grunt. I searched for quite a while and wasn't able to find a solid alternative that makes use of npm scripts so I decided to write my own.
 
 ## License
 
