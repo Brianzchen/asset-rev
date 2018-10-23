@@ -63,21 +63,24 @@ module.exports = (workingDir, patterns) => new Promise(resolve => {
 
       filteredRes.forEach(file => {
         fs.readFile(file, 'utf8', (error, contents) => {
+          let newContents = contents;
+
           if (error) {
             console.error('Could not read file', err);
           }
 
           hashedFiles.forEach((hashFile, i) => {
-            contents = contents.replace(new RegExp(relativeHashingFiles[i], 'g'), hashFile); // eslint-disable-line
+            newContents = newContents.replace(new RegExp(relativeHashingFiles[i], 'g'), hashFile);
           });
 
-          fs.writeFile(file, contents, writeError => {
-            if (writeError) {
-              console.error('Could not write file');
-            }
-
-            resolve();
-          });
+          if (newContents !== contents) {
+            fs.writeFile(file, newContents, writeError => {
+              if (writeError) {
+                console.error('Could not write file');
+              }
+              resolve();
+            });
+          }
         });
       });
     },

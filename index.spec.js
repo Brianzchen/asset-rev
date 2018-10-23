@@ -16,7 +16,7 @@ describe('asset-rev', () => {
   rimraf.sync(workingDirFullPath);
 
   mkdirp(workingDirFullPath);
-  fs.writeFile(`${workingDirFullPath}/${referenceFile}`, `'${patterns[0]}'`);
+  fs.writeFile(`${workingDirFullPath}/${referenceFile}`, `'${patterns[0]}''${patterns[0]}'`);
   fs.writeFile(`${workingDirFullPath}/${patterns[0]}`, 'foo bar');
 
   it('updates the name of a file', done => {
@@ -28,12 +28,11 @@ describe('asset-rev', () => {
     });
   });
 
-  it('updates the reference inside the reference file', done => {
+  it('updates the reference inside the reference file', () => {
     rev(workingDir, patterns).then(() => {
       find.file(workingDirFullPath, files => {
         fs.readFile(files[files.indexOf(`${workingDirFullPath}/${referenceFile}`)], 'utf8', (err, contents) => {
           expect(contents.indexOf(patterns[0]) > 1).toBeTruthy();
-          done();
         });
       });
     });
