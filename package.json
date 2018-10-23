@@ -20,9 +20,9 @@
     "app-root-path": "^2.1.0"
   },
   "devDependencies": {
-    "find": "^0.2.9",
-    "jest": "^23.6.0",
-    "mkdirp": "^0.5.1",
-    "rimraf": "^2.6.2"
+    "find": "0.2.9",
+    "jest": "23.6.0",
+    "mkdirp": "0.5.1",
+    "rimraf": "2.6.2"
   }
 }
