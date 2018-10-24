@@ -16,8 +16,13 @@ describe('asset-rev', () => {
   rimraf.sync(workingDirFullPath);
 
   mkdirp(workingDirFullPath);
-  fs.writeFile(`${workingDirFullPath}/${referenceFile}`, `'${patterns[0]}''${patterns[0]}'`);
-  fs.writeFile(`${workingDirFullPath}/${patterns[0]}`, 'foo bar');
+  fs.writeFile(`${workingDirFullPath}/${referenceFile}`, '');
+  fs.writeFile(`${workingDirFullPath}/${patterns[0]}`, '');
+
+  beforeEach(() => {
+    fs.writeFileSync(`${workingDirFullPath}/${referenceFile}`, `'${patterns[0]}'\n'${patterns[0]}'`);
+    fs.writeFileSync(`${workingDirFullPath}/${patterns[0]}`, 'foo bar');
+  });
 
   it('updates the name of a file', done => {
     rev(workingDir, patterns).then(() => {
@@ -32,7 +37,10 @@ describe('asset-rev', () => {
     rev(workingDir, patterns).then(() => {
       find.file(workingDirFullPath, files => {
         fs.readFile(files[files.indexOf(`${workingDirFullPath}/${referenceFile}`)], 'utf8', (err, contents) => {
-          expect(contents.indexOf(patterns[0]) > 1).toBeTruthy();
+          expect(
+            contents.indexOf(patterns[0]) > 1
+            && contents.indexOf(patterns[0] < contents.indexOf('/n'))
+          ).toBeTruthy();
           done();
         });
       });
