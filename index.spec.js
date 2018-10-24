@@ -28,11 +28,12 @@ describe('asset-rev', () => {
     });
   });
 
-  it('updates the reference inside the reference file', () => {
+  it('updates the reference inside the reference file', done => {
     rev(workingDir, patterns).then(() => {
       find.file(workingDirFullPath, files => {
         fs.readFile(files[files.indexOf(`${workingDirFullPath}/${referenceFile}`)], 'utf8', (err, contents) => {
           expect(contents.indexOf(patterns[0]) > 1).toBeTruthy();
+          done();
         });
       });
     });

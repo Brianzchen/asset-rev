@@ -63,7 +63,9 @@ module.exports = (workingDir, patterns) => new Promise(resolve => {
         return arr[arr.length - 1].split('.').length >= 2;
       });
 
-      filteredRes.forEach(file => {
+      filteredRes.forEach((file, i) => {
+        const lastFile = i === filteredRes.length - 1;
+
         fs.readFile(file, 'utf8', (error, contents) => {
           let newContents = contents;
 
@@ -80,8 +82,11 @@ module.exports = (workingDir, patterns) => new Promise(resolve => {
               if (writeError) {
                 console.error('Could not write file');
               }
-              resolve();
+
+              if (lastFile) resolve();
             });
+          } else {
+            if (lastFile) resolve();
           }
         });
       });
