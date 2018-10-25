@@ -76,8 +76,8 @@ module.exports = (workingDir, patterns) => new Promise((resolve, reject) => {
             reject(error);
           }
 
-          hashedFiles.forEach((hashFile, i) => {
-            newContents = newContents.replace(new RegExp(relativeHashingFiles[i], 'g'), hashFile);
+          hashedFiles.forEach((hashFile, index) => {
+            newContents = newContents.replace(new RegExp(relativeHashingFiles[index], 'g'), hashFile);
           });
 
           if (newContents !== contents) {
@@ -89,9 +89,9 @@ module.exports = (workingDir, patterns) => new Promise((resolve, reject) => {
 
               if (lastFile) resolve();
             });
-          } else {
-            if (lastFile) resolve();
           }
+
+          if (lastFile) resolve();
         });
       });
     },
