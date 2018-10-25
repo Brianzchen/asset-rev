@@ -46,4 +46,21 @@ describe('asset-rev', () => {
       });
     });
   });
+
+  it('renames deeply nested files', done => {
+    const nestedFile = 'this-is-deep.js';
+    const nestedPath = 'deeply/nested/file/test/';
+    const fullPath = `${workingDirFullPath}/${nestedPath}`;
+
+    mkdirp(fullPath, () => {
+      fs.writeFile(`${workingDirFullPath}/deeply/nested/file/test/${nestedFile}`, 'this is a file I guess', () => {
+        rev(workingDir, [nestedFile]).then(() => {
+          find.file(fullPath, files => {
+            expect(files.includes(nestedFile)).toBeFalsy()
+            done();
+          });
+        });
+      });
+    });
+  });
 });
