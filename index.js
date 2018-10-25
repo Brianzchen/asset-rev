@@ -4,7 +4,7 @@ const glob = require('glob');
 const crypto = require('crypto');
 const appRootPath = require('app-root-path');
 
-module.exports = (workingDir, patterns) => new Promise(resolve => {
+module.exports = (workingDir, patterns) => new Promise((resolve, reject) => {
   // Get working directory relative to root
   const cwd = path.join(appRootPath.path, workingDir);
 
@@ -43,6 +43,7 @@ module.exports = (workingDir, patterns) => new Promise(resolve => {
     fs.rename(fileName, hashedFileName, err => {
       if (err) {
         console.error('Could not rename file', err);
+        reject(err);
       }
     });
 
@@ -55,6 +56,7 @@ module.exports = (workingDir, patterns) => new Promise(resolve => {
     (err, res) => {
       if (err) {
         console.error('Error', err);
+        reject(err);
       }
 
       // Filter all dirs and keep files only
@@ -70,7 +72,8 @@ module.exports = (workingDir, patterns) => new Promise(resolve => {
           let newContents = contents;
 
           if (error) {
-            console.error('Could not read file', err);
+            console.error('Could not read file', error);
+            reject(error);
           }
 
           hashedFiles.forEach((hashFile, i) => {
@@ -80,7 +83,8 @@ module.exports = (workingDir, patterns) => new Promise(resolve => {
           if (newContents !== contents) {
             fs.writeFile(file, newContents, writeError => {
               if (writeError) {
-                console.error('Could not write file');
+                console.error('Could not write file', writeError);
+                reject(writeError);
               }
 
               if (lastFile) resolve();

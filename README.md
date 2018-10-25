@@ -51,7 +51,11 @@ asset-rev [workingDir] [patterns]
 ### Node
 
 ```js
-rev(workingDir, patterns);
+rev(workingDir, patterns).then(() => {
+  // ...
+}).catch(err => {
+  // ...
+});
 ```
 
 - `workingDir`: Much like for the command line usage relative to your project root, this will be a string of where the script should look for your patterns and also defines that all files in this folder will have their references of the rev'd files updated.
