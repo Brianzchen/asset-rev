@@ -2,3 +2,5 @@ example
 index.spec.js
 renovate.json
 yarn.lock
+.eslintrc.js
+.eslintignore
