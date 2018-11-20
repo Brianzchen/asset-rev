@@ -4,7 +4,7 @@ const glob = require('glob');
 const crypto = require('crypto');
 const appRootPath = require('app-root-path');
 
-module.exports = (workingDir, patterns) => new Promise((resolve, reject) => {
+module.exports = (workingDir, patterns, contenthash = false) => new Promise((resolve, reject) => {
   // Get working directory relative to root
   const cwd = path.join(appRootPath.path, workingDir);
 
@@ -24,9 +24,11 @@ module.exports = (workingDir, patterns) => new Promise((resolve, reject) => {
 
   // Replace file names with hashed counterpart and store reference of hashed name
   const hashedFiles = getSimplePath(hashingFiles.map(fileName => {
-    const randomBuf = crypto.randomBytes(256);
+    const randomBuf = contenthash
+      ? fs.readFileSync(fileName)
+      : crypto.randomBytes(256).toString();
     const md5 = crypto.createHash('md5');
-    md5.update(randomBuf.toString());
+    md5.update(randomBuf);
     const hash = md5.digest('hex');
 
     const array = fileName.split('/');

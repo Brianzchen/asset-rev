@@ -3,5 +3,10 @@ const rev = require('../index');
 
 const workingDir = process.argv[2];
 const patterns = process.argv[3].split(' ');
+const contenthash = false;
 
-rev(workingDir, patterns);
+rev(workingDir, patterns, contenthash).then(() => {
+  process.exit(1);
+}).catch(() => {
+  process.exit(0);
+});
