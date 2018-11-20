@@ -14,7 +14,8 @@
   },
   "scripts": {
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "prepublish": "npm test"
   },
   "dependencies": {
     "app-root-path": "^2.1.0",
@@ -36,7 +37,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm test && npm run lint"
+      "pre-commit": "npm run lint"
     }
   }
 }
