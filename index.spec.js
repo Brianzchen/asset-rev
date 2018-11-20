@@ -70,24 +70,40 @@ describe('asset-rev', () => {
     const contentHashJpegFile = 'test.jpeg';
     const contentHashJpegFile2 = 'test2.jpeg';
 
-    beforeEach(() => {
-      fs.writeFileSync(`${workingDirFullPath}/${contentHashJsFile}`, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.');
-    });
-
-    it('hashes based on content for js files', done => {
+    describe('for js files', () => {
       const constantContentHash = 'db89bb5ceab87f9c0fcc2ab36c189c2c';
+      const inputStream = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
 
-      rev(workingDir, [contentHashJsFile], true).then(() => {
-        find.file(workingDirFullPath, files => {
-          const truthyMap = files.map(file => file.includes(constantContentHash));
-          expect(truthyMap.includes(true)).toBeTruthy();
-          expect(truthyMap.filter(o => o).length === 1).toBeTruthy();
-          done();
+      beforeEach(() => {
+        fs.writeFileSync(`${workingDirFullPath}/${contentHashJsFile}`, inputStream);
+      });
+
+      it('handles js files', done => {
+        rev(workingDir, [contentHashJsFile], true).then(() => {
+          find.file(workingDirFullPath, files => {
+            const truthyMap = files.map(file => file.includes(constantContentHash));
+            expect(truthyMap.includes(true)).toBeTruthy();
+            expect(truthyMap.filter(o => o).length === 1).toBeTruthy();
+            done();
+          });
+        });
+      });
+
+      it('will produce a different hash if the content is slightly modified', done => {
+        fs.unlinkSync(`${workingDirFullPath}/${constantContentHash}.${contentHashJsFile}`);
+        fs.writeFileSync(`${workingDirFullPath}/${contentHashJsFile}`, inputStream.substring(0, inputStream.length - 1));
+
+        rev(workingDir, [contentHashJsFile], true).then(() => {
+          find.file(workingDirFullPath, files => {
+            const truthyMap = files.map(file => file.includes(constantContentHash));
+            expect(truthyMap.includes(true)).toBeFalsy();
+            done();
+          });
         });
       });
     });
 
-    it('hashes based on content for jpeg files', done => {
+    it('handles jpeg files', done => {
       const constantContentHash = 'de25c5b6418f18c204aa3fb3905c2d82';
 
       copyfiles(['testAssets/*', 'example'], { up: true }, () => {
