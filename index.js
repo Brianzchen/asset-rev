@@ -6,7 +6,7 @@ const appRootPath = require('app-root-path');
 
 module.exports = (workingDir, patterns, { contenthash = false }) => new Promise(
   (resolve, reject) => {
-  // Get working directory relative to root
+    // Get working directory relative to root
     const cwd = path.join(appRootPath.path, workingDir);
 
     // Get list of files to hash
