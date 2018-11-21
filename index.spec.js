@@ -66,6 +66,10 @@ describe('asset-rev', () => {
   });
 
   describe('hashes based on content', () => {
+    const options = {
+      contenthash: true,
+    };
+
     const contentHashJsFile = 'contenthash.js';
     const contentHashJpegFile = 'test.jpeg';
     const contentHashJpegFile2 = 'test2.jpeg';
@@ -79,7 +83,7 @@ describe('asset-rev', () => {
       });
 
       it('handles js files', done => {
-        rev(workingDir, [contentHashJsFile], true).then(() => {
+        rev(workingDir, [contentHashJsFile], options).then(() => {
           find.file(workingDirFullPath, files => {
             const truthyMap = files.map(file => file.includes(constantContentHash));
             expect(truthyMap.includes(true)).toBeTruthy();
@@ -93,7 +97,7 @@ describe('asset-rev', () => {
         fs.unlinkSync(`${workingDirFullPath}/${constantContentHash}.${contentHashJsFile}`);
         fs.writeFileSync(`${workingDirFullPath}/${contentHashJsFile}`, inputStream.substring(0, inputStream.length - 1));
 
-        rev(workingDir, [contentHashJsFile], true).then(() => {
+        rev(workingDir, [contentHashJsFile], options).then(() => {
           find.file(workingDirFullPath, files => {
             const truthyMap = files.map(file => file.includes(constantContentHash));
             expect(truthyMap.includes(true)).toBeFalsy();
@@ -107,7 +111,7 @@ describe('asset-rev', () => {
       const constantContentHash = 'de25c5b6418f18c204aa3fb3905c2d82';
 
       copyfiles(['testAssets/*', 'example'], { up: true }, () => {
-        rev(workingDir, [contentHashJpegFile, contentHashJpegFile2], true).then(() => {
+        rev(workingDir, [contentHashJpegFile, contentHashJpegFile2], options).then(() => {
           find.file(workingDirFullPath, files => {
             const truthyMap = files.map(file => file.includes(constantContentHash));
             expect(truthyMap.includes(true)).toBeTruthy();

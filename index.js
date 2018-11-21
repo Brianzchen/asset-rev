@@ -4,8 +4,12 @@ const glob = require('glob');
 const crypto = require('crypto');
 const appRootPath = require('app-root-path');
 
-module.exports = (workingDir, patterns, { contenthash = false }) => new Promise(
+module.exports = (workingDir, patterns, options) => new Promise(
   (resolve, reject) => {
+    const {
+      contenthash = false,
+    } = options || {};
+
     // Get working directory relative to root
     const cwd = path.join(appRootPath.path, workingDir);
 
