@@ -4,96 +4,104 @@ const glob = require('glob');
 const crypto = require('crypto');
 const appRootPath = require('app-root-path');
 
-module.exports = (workingDir, patterns) => new Promise((resolve, reject) => {
-  // Get working directory relative to root
-  const cwd = path.join(appRootPath.path, workingDir);
+module.exports = (workingDir, patterns, options) => new Promise(
+  (resolve, reject) => {
+    const {
+      contenthash = false,
+    } = options || {};
 
-  // Get list of files to hash
-  const hashingFiles = [];
-  patterns.forEach(pattern => {
-    const files = glob.sync(`${cwd}/**/${pattern}`);
-    hashingFiles.push(...files);
-  });
+    // Get working directory relative to root
+    const cwd = path.join(appRootPath.path, workingDir);
 
-  const getSimplePath = fileNames => fileNames.map(file => {
-    const fileArr = file.split('/');
-    return `${fileArr[fileArr.length - 1]}`;
-  });
-
-  const relativeHashingFiles = getSimplePath(hashingFiles);
-
-  // Replace file names with hashed counterpart and store reference of hashed name
-  const hashedFiles = getSimplePath(hashingFiles.map(fileName => {
-    const randomBuf = crypto.randomBytes(256);
-    const md5 = crypto.createHash('md5');
-    md5.update(randomBuf.toString());
-    const hash = md5.digest('hex');
-
-    const array = fileName.split('/');
-
-    let hashedFileName = '';
-    array.forEach((o, i) => {
-      if (i !== 0) hashedFileName += '/';
-
-      if (i === array.length - 1) hashedFileName += `${hash}.`;
-
-      hashedFileName += o;
+    // Get list of files to hash
+    const hashingFiles = [];
+    patterns.forEach(pattern => {
+      const files = glob.sync(`${cwd}/**/${pattern}`);
+      hashingFiles.push(...files);
     });
 
-    fs.rename(fileName, hashedFileName, err => {
-      if (err) {
-        console.error('Could not rename file', err);
-        reject(err);
-      }
+    const getSimplePath = fileNames => fileNames.map(file => {
+      const fileArr = file.split('/');
+      return `${fileArr[fileArr.length - 1]}`;
     });
 
-    return hashedFileName;
-  }));
+    const relativeHashingFiles = getSimplePath(hashingFiles);
 
-  // Replace file references with hashed file references
-  glob(
-    `${cwd}/**/*`,
-    (err, res) => {
-      if (err) {
-        console.error('Error', err);
-        reject(err);
-      }
+    // Replace file names with hashed counterpart and store reference of hashed name
+    const hashedFiles = getSimplePath(hashingFiles.map(fileName => {
+      const randomBuf = contenthash
+        ? fs.readFileSync(fileName)
+        : crypto.randomBytes(256).toString();
+      const md5 = crypto.createHash('md5');
+      md5.update(randomBuf);
+      const hash = md5.digest('hex');
 
-      // Filter all dirs and keep files only
-      const filteredRes = res.filter(o => {
-        const arr = o.split('/');
-        return arr[arr.length - 1].split('.').length >= 2;
+      const array = fileName.split('/');
+
+      let hashedFileName = '';
+      array.forEach((o, i) => {
+        if (i !== 0) hashedFileName += '/';
+
+        if (i === array.length - 1) hashedFileName += `${hash}.`;
+
+        hashedFileName += o;
       });
 
-      filteredRes.forEach((file, i) => {
-        const lastFile = i === filteredRes.length - 1;
+      fs.rename(fileName, hashedFileName, err => {
+        if (err) {
+          console.error('Could not rename file', err);
+          reject(err);
+        }
+      });
 
-        fs.readFile(file, 'utf8', (error, contents) => {
-          let newContents = contents;
+      return hashedFileName;
+    }));
 
-          if (error) {
-            console.error('Could not read file', error);
-            reject(error);
-          }
+    // Replace file references with hashed file references
+    glob(
+      `${cwd}/**/*`,
+      (err, res) => {
+        if (err) {
+          console.error('Error', err);
+          reject(err);
+        }
 
-          hashedFiles.forEach((hashFile, index) => {
-            newContents = newContents.replace(new RegExp(relativeHashingFiles[index], 'g'), hashFile);
-          });
-
-          if (newContents !== contents) {
-            fs.writeFile(file, newContents, writeError => {
-              if (writeError) {
-                console.error('Could not write file', writeError);
-                reject(writeError);
-              }
-
-              if (lastFile) resolve();
-            });
-          }
-
-          if (lastFile) resolve();
+        // Filter all dirs and keep files only
+        const filteredRes = res.filter(o => {
+          const arr = o.split('/');
+          return arr[arr.length - 1].split('.').length >= 2;
         });
-      });
-    },
-  );
-});
+
+        filteredRes.forEach((file, i) => {
+          const lastFile = i === filteredRes.length - 1;
+
+          fs.readFile(file, 'utf8', (error, contents) => {
+            let newContents = contents;
+
+            if (error) {
+              console.error('Could not read file', error);
+              reject(error);
+            }
+
+            hashedFiles.forEach((hashFile, index) => {
+              newContents = newContents.replace(new RegExp(relativeHashingFiles[index], 'g'), hashFile);
+            });
+
+            if (newContents !== contents) {
+              fs.writeFile(file, newContents, writeError => {
+                if (writeError) {
+                  console.error('Could not write file', writeError);
+                  reject(writeError);
+                }
+
+                if (lastFile) resolve();
+              });
+            }
+
+            if (lastFile) resolve();
+          });
+        });
+      },
+    );
+  },
+);
