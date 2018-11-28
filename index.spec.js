@@ -125,7 +125,7 @@ describe('asset-rev', () => {
       });
     });
 
-    fit('handles eot files', done => {
+    it('handles eot files', done => {
       const constantContentHash = '4097d6bb806f2eb92bc63ff1ce17043b';
 
       copyfiles(['testAssets/fonts/*', 'example'], { up: true }, () => {
@@ -140,7 +140,7 @@ describe('asset-rev', () => {
       });
     });
 
-    fit('handles ttf files', done => {
+    it('handles ttf files', done => {
       const constantContentHash = 'd024bb4be0c4158809b507536a7551e3';
 
       copyfiles(['testAssets/fonts/*', 'example'], { up: true }, () => {
@@ -155,7 +155,7 @@ describe('asset-rev', () => {
       });
     });
 
-    fit('handles woff files', done => {
+    it('handles woff files', done => {
       const constantContentHash = '5475315dca6ef6a1271b9d3bbab7ec41';
 
       copyfiles(['testAssets/fonts/*', 'example'], { up: true }, () => {
