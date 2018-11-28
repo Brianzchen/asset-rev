@@ -73,6 +73,9 @@ describe('asset-rev', () => {
     const contentHashJsFile = 'contenthash.js';
     const contentHashJpegFile = 'test.jpeg';
     const contentHashJpegFile2 = 'test2.jpeg';
+    const contentHashEotFile = 'styleguide.eot';
+    const contentHashTtfFile = 'styleguide.ttf';
+    const contentHashWoffFile = 'styleguide.woff';
 
     describe('for js files', () => {
       const constantContentHash = 'db89bb5ceab87f9c0fcc2ab36c189c2c';
@@ -110,8 +113,53 @@ describe('asset-rev', () => {
     it('handles jpeg files', done => {
       const constantContentHash = 'de25c5b6418f18c204aa3fb3905c2d82';
 
-      copyfiles(['testAssets/*', 'example'], { up: true }, () => {
+      copyfiles(['testAssets/images/*', 'example'], { up: true }, () => {
         rev(workingDir, [contentHashJpegFile, contentHashJpegFile2], options).then(() => {
+          find.file(workingDirFullPath, files => {
+            const truthyMap = files.map(file => file.includes(constantContentHash));
+            expect(truthyMap.includes(true)).toBeTruthy();
+            expect(truthyMap.filter(o => o).length === 1).toBeTruthy();
+            done();
+          });
+        });
+      });
+    });
+
+    fit('handles eot files', done => {
+      const constantContentHash = '4097d6bb806f2eb92bc63ff1ce17043b';
+
+      copyfiles(['testAssets/fonts/*', 'example'], { up: true }, () => {
+        rev(workingDir, [contentHashEotFile], options).then(() => {
+          find.file(workingDirFullPath, files => {
+            const truthyMap = files.map(file => file.includes(constantContentHash));
+            expect(truthyMap.includes(true)).toBeTruthy();
+            expect(truthyMap.filter(o => o).length === 1).toBeTruthy();
+            done();
+          });
+        });
+      });
+    });
+
+    fit('handles ttf files', done => {
+      const constantContentHash = 'd024bb4be0c4158809b507536a7551e3';
+
+      copyfiles(['testAssets/fonts/*', 'example'], { up: true }, () => {
+        rev(workingDir, [contentHashTtfFile], options).then(() => {
+          find.file(workingDirFullPath, files => {
+            const truthyMap = files.map(file => file.includes(constantContentHash));
+            expect(truthyMap.includes(true)).toBeTruthy();
+            expect(truthyMap.filter(o => o).length === 1).toBeTruthy();
+            done();
+          });
+        });
+      });
+    });
+
+    fit('handles woff files', done => {
+      const constantContentHash = '5475315dca6ef6a1271b9d3bbab7ec41';
+
+      copyfiles(['testAssets/fonts/*', 'example'], { up: true }, () => {
+        rev(workingDir, [contentHashWoffFile], options).then(() => {
           find.file(workingDirFullPath, files => {
             const truthyMap = files.map(file => file.includes(constantContentHash));
             expect(truthyMap.includes(true)).toBeTruthy();
