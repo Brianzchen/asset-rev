@@ -22,7 +22,14 @@ module.exports = (workingDir, patterns, options) => new Promise(
 
     const getSimplePath = fileNames => fileNames.map(file => {
       const fileArr = file.split('/');
-      return `${fileArr[fileArr.length - 1]}`;
+      const fileArrParsed = fileArr.slice(fileArr.indexOf(workingDir) + 1);
+
+      let rootPath = '';
+      for (let i = 0, len = fileArrParsed.length; i < len; i++) {
+        rootPath = `${rootPath}/${fileArrParsed[i]}`;
+      }
+
+      return rootPath;
     });
 
     const relativeHashingFiles = getSimplePath(hashingFiles);
