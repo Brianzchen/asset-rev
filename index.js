@@ -26,7 +26,10 @@ module.exports = (workingDir, patterns, options) => new Promise(
 
       let rootPath = '';
       for (let i = 0, len = fileArrParsed.length; i < len; i++) {
-        rootPath = `${rootPath}/${fileArrParsed[i]}`;
+        if (i !== 0) {
+          rootPath = `${rootPath}/`;
+        }
+        rootPath = `${rootPath}${fileArrParsed[i]}`;
       }
 
       return rootPath;
