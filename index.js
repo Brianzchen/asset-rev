@@ -22,7 +22,9 @@ module.exports = (workingDir, patterns, options) => new Promise(
 
     const getSimplePath = fileNames => fileNames.map(file => {
       const fileArr = file.split('/');
-      const fileArrParsed = fileArr.slice(fileArr.indexOf(workingDir) + 1);
+      const dir = workingDir.split('/');
+
+      const fileArrParsed = fileArr.slice(fileArr.indexOf(dir[dir.length - 1]) + 1);
 
       let rootPath = '';
       for (let i = 0, len = fileArrParsed.length; i < len; i++) {

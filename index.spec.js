@@ -21,7 +21,7 @@ describe('asset-rev', () => {
   fs.writeFile(`${workingDirFullPath}/${patterns[0]}`, '');
 
   beforeEach(() => {
-    fs.writeFileSync(`${workingDirFullPath}/${referenceFile}`, `'/${patterns[0]}'\n'/${patterns[0]}'`);
+    fs.writeFileSync(`${workingDirFullPath}/${referenceFile}`, `'${patterns[0]}'\n'${patterns[0]}'`);
     fs.writeFileSync(`${workingDirFullPath}/${patterns[0]}`, 'foo bar');
   });
 
