@@ -4,3 +4,4 @@ renovate.json
 yarn.lock
 .eslintrc.js
 .eslintignore
+testAssets
