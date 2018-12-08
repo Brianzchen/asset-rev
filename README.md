@@ -49,6 +49,7 @@ asset-rev [workingDir] [patterns] [options]
 - `patterns`: String of glob patterns for files to be rev'd inside the `workingDir`. You can specify multiple globs separated by a space ` ` and encapsulated by single quotes, `'test/*.* test1/*.*'`.
 - `options`:
     - `--contenthash`: By default the hash generated will be random every time, if you would instead prefer the hash to be generated based on content then you can pass in this variable.
+    - `--foldermatch`: By default this is set to true, `asset-rev` will only hash strings it comes across if it is a complete 1 - 1 match when including the directory path relative to the `workingDir`. It it preferred to keep this option enabled as you may come into issues if you have two files with the same name but in different folders, though if you have a path that is constructed through string concatenation then this can serve as an alternative.
 
 ### Node
 
@@ -64,6 +65,7 @@ rev(workingDir, patterns).then(() => {
 - `patterns`: This accepts an array of strings of glob patterns for the files to be rev'd inside the `workingDir`.
 - `options`: `typeof Object`
     - `contenthash`: Boolean variable that when passed in will generate the hash based on content, by default hashes are random each time.
+    - `foldermatch`: Boolean variable that when passed in will take the full path into consideration for string matches
 
 ## Caveat
 

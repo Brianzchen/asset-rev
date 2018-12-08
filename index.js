@@ -7,7 +7,8 @@ const appRootPath = require('app-root-path');
 module.exports = (workingDir, patterns, options) => new Promise(
   (resolve, reject) => {
     const {
-      contenthash = false,
+      contenthash = true,
+      foldermatch = true,
     } = options || {};
 
     // Get working directory relative to root
@@ -22,6 +23,11 @@ module.exports = (workingDir, patterns, options) => new Promise(
 
     const getSimplePath = fileNames => fileNames.map(file => {
       const fileArr = file.split('/');
+
+      if (!foldermatch) {
+        return `${fileArr[fileArr.length - 1]}`;
+      }
+
       const dir = workingDir.split('/');
 
       const fileArrParsed = fileArr.slice(fileArr.indexOf(dir[dir.length - 1]) + 1);

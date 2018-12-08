@@ -67,7 +67,6 @@ describe('asset-rev', () => {
 
   describe('hashes based on content', () => {
     const options = {
-      contenthash: true,
     };
 
     const contentHashJsFile = 'contenthash.js';
